@@ -29,32 +29,34 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Commands.AutoIntake;
+import org.firstinspires.ftc.teamcode.Commands.AutoOuttakeBackwards;
 import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.WristSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Utilities.Constants;
 
-@TeleOp(name="Main TeleOp", group="Linear OpMode")
-//@Disabled
-public class MainTeleOp extends LinearOpMode {
+@Autonomous(name="No Vision Red", group="Linear OpMode")
+@Disabled
+public class NoVisionRed extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+        telemetry.setAutoClear(false);
 
         //Initialize Subsystems
         DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(
@@ -81,49 +83,16 @@ public class MainTeleOp extends LinearOpMode {
                 hardwareMap.get(TouchSensor.class, Constants.armLimitSwitchID),
                 runtime, telemetry);
 
-
         // Wait for the game to start (driver presses PLAY)
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
         waitForStart();
         runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        //For Auto, commands are performed sequentially with sleep commands between them.
+        new AutoOuttakeBackwards(intakeSubsystem, drivetrainSubsystem, armSubsystem, extenderSubsystem, wristSubsystem, runtime, telemetry);
+        sleep(1000);
 
-            drivetrainSubsystem.driveManual(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-
-            if (gamepad1.a) {
-                drivetrainSubsystem.resetGyro();
-            }
-
-            intakeSubsystem.teleOPIntake(gamepad2.right_trigger, gamepad2.left_trigger);
-            wristSubsystem.manualAngleWrist(gamepad2.right_bumper, gamepad2.left_bumper);
-            armSubsystem.ManualPositionArm(gamepad2.dpad_left, gamepad2.dpad_right);
-
-            if (gamepad2.dpad_up) {
-                wristSubsystem.autoAngleWrist(WristSubsystem.Positions.UP);
-            }
-            else if (gamepad2.dpad_down) {
-                wristSubsystem.autoAngleWrist(WristSubsystem.Positions.DOWN);
-            }
-
-
-
-            /*
-            if (gamepad2.x) {
-                extenderSubsystem.extendToPosition(ExtenderSubsystem.Position.RETRACTED);
-            }
-            else if (gamepad2.y) {
-                extenderSubsystem.extendToPosition(ExtenderSubsystem.Position.HALFWAY);
-            }
-            else if (gamepad2.b) {
-                extenderSubsystem.extendToPosition(ExtenderSubsystem.Position.EXTENDED);
-            }
-
-             */
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
-        }
+        new AutoIntake(intakeSubsystem, drivetrainSubsystem, armSubsystem, extenderSubsystem, wristSubsystem, runtime, telemetry);
     }
 }

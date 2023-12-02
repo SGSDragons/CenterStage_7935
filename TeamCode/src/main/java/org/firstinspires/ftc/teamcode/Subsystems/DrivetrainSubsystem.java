@@ -65,8 +65,8 @@ public class DrivetrainSubsystem {
         backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
-        RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.DOWN;
+        RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoFacingDirection, usbFacingDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         imu.resetYaw();
@@ -189,11 +189,14 @@ public class DrivetrainSubsystem {
             if (-1 < derivative && derivative < 1 & runtime.seconds() - startTime > 1) {
                 motorsActive = false;
             }
-            drive(0.0, motorPower, 0.0);
 
             if (runtime.seconds() - startTime > 8) {
                 motorsActive = false;
             }
+
+            drive(0.0, motorPower, 0.0);
+            currentPosition = backLeftDrive.getCurrentPosition() + backRightDrive.getCurrentPosition()
+                    + frontLeftDrive.getCurrentPosition() + frontRightDrive.getCurrentPosition();
         }
         //Once motorsActive is false, stop motors.
         stopMotors();
@@ -223,7 +226,7 @@ public class DrivetrainSubsystem {
 
             case LEFT:
                 targetAngle = startAngle - turnAngleRadians;
-                currentAngle += -0.01;
+                currentAngle -= 0.01;
                 turningRight = false;
                 break;
 
@@ -260,6 +263,7 @@ public class DrivetrainSubsystem {
             }
 
             drive(0.0, 0.0, turnPower * (turningRight ? 1 : -1));
+            currentAngle = getAngle();
         }
         stopMotors();
     }
