@@ -64,17 +64,23 @@ public class MainTeleOp extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, Constants.frontLeftDriveID),
                 hardwareMap.get(IMU.class, "imu"),
                 runtime, telemetry);
-
+/*
         IntakeSubsystem intakeSubsystem = new IntakeSubsystem(
                 hardwareMap.get(DcMotor.class, Constants.intakeID), runtime, telemetry);
 
+ */
+/*
         WristSubsystem wristSubsystem = new WristSubsystem(
                 hardwareMap.get(Servo.class, Constants.wristID), runtime, telemetry);
 
+ */
+/*
         ExtenderSubsystem extenderSubsystem = new ExtenderSubsystem(
                 hardwareMap.get(DcMotor.class, Constants.extenderID),
                 hardwareMap.get(TouchSensor.class, Constants.extenderLimitSwitchID),
                 runtime, telemetry);
+
+ */
 
         ArmSubsystem armSubsystem = new ArmSubsystem(
                 hardwareMap.get(DcMotor.class, Constants.armID),
@@ -95,16 +101,19 @@ public class MainTeleOp extends LinearOpMode {
                 drivetrainSubsystem.resetGyro();
             }
 
-            intakeSubsystem.teleOPIntake(gamepad2.right_trigger, gamepad2.left_trigger);
-            wristSubsystem.manualAngleWrist(gamepad2.right_bumper, gamepad2.left_bumper);
+            //intakeSubsystem.teleOPIntake(gamepad2.right_trigger, gamepad2.left_trigger);
+            //wristSubsystem.manualAngleWrist(gamepad2.right_bumper, gamepad2.left_bumper);
             armSubsystem.ManualPositionArm(gamepad2.dpad_left, gamepad2.dpad_right);
 
+            /*
             if (gamepad2.dpad_up) {
                 wristSubsystem.autoAngleWrist(WristSubsystem.Positions.UP);
             }
             else if (gamepad2.dpad_down) {
                 wristSubsystem.autoAngleWrist(WristSubsystem.Positions.DOWN);
             }
+
+             */
 
 
 

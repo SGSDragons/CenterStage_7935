@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Templates.CommandTemplate;
 import org.firstinspires.ftc.teamcode.Utilities.Templates.SubsystemTemplate;
 
 @TeleOp(name="Position Test", group="Linear OpMode")
-//@Disabled
+@Disabled
 public class PositionTest extends LinearOpMode {
 
     // Declare OpMode members.

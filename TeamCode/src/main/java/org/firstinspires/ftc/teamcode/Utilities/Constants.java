@@ -78,7 +78,7 @@ public class Constants {
     public static int armMotor120Position = (int) ((120 / 360) * (armMotorCPR * armGearRatio));
     public static int armMotor90Position = (int) ((90 / 360) * (armMotorCPR * armGearRatio));
 
-    public static double armZeroingPower = -0.05;
+    public static double armZeroingPower = -0.3;
 
     //Servo Position Values
     public static double wristMinPosition = 0.0;

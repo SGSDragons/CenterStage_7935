@@ -74,8 +74,8 @@ public class ExtenderSubsystem {
         }
         extender.setPower(0.0);
         extenderZeroPosition = (int) (extender.getCurrentPosition() + (1/8 * Constants.extenderMotorCPI));
-        extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         extender.setTargetPosition(extenderZeroPosition);
+        extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public int getExtenderPosition() {
