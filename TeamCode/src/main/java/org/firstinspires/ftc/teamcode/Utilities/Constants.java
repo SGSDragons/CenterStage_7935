@@ -16,9 +16,9 @@ public class Constants {
 
  */
 
-    public static boolean unlockDriveSpeed = false;
+    public static boolean unlockDriveSpeed = true;
     public static boolean radianTurning = false;
-    public static boolean fieldOrientation = true;
+    public static boolean fieldOrientation = false;
 
     //Hardware IDs
     public static final String backLeftDriveID = "backLeftDrive";
@@ -43,7 +43,7 @@ public class Constants {
 
     public static double launcherPower = 1.0;
 
-    public static double maxDrivePower = 0.5;
+    public static double maxDrivePower = 0.75;
 
     //Drive Encoder/Position Values (FrontLeft Motor is Leader)
     public static final double  driveMotorCPR = 28;
@@ -78,7 +78,7 @@ public class Constants {
     public static int armMotor120Position = (int) ((120 / 360) * (armMotorCPR * armGearRatio));
     public static int armMotor90Position = (int) ((90 / 360) * (armMotorCPR * armGearRatio));
 
-    public static double armZeroingPower = -0.3;
+    public static double armZeroingPower = -0.5;
 
     //Servo Position Values
     public static double wristMinPosition = 0.0;
@@ -114,6 +114,7 @@ public class Constants {
 
     public static double spikeLeftCameraPosition = 426;
     public static double spikeRightCameraPosition = 853;
+
 /*
     public Constants() throws FileNotFoundException, JSONException {
         driveModePID = true;

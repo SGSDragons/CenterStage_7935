@@ -29,8 +29,9 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -38,13 +39,14 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
-
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Utilities.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.Templates.CommandTemplate;
+import org.firstinspires.ftc.teamcode.Utilities.Templates.SubsystemTemplate;
 
-@TeleOp(name="Main TeleOp", group="Linear OpMode")
+@Autonomous(name="Red Auto", group="Linear OpMode")
 //@Disabled
-public class MainTeleOp extends LinearOpMode {
+public class RedAuto extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -62,77 +64,20 @@ public class MainTeleOp extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, Constants.frontLeftDriveID),
                 hardwareMap.get(IMU.class, "imu"),
                 runtime, telemetry);
-/*
-        IntakeSubsystem intakeSubsystem = new IntakeSubsystem(
-                hardwareMap.get(DcMotor.class, Constants.intakeID), runtime, telemetry);
-
- */
-/*
-        WristSubsystem wristSubsystem = new WristSubsystem(
-                hardwareMap.get(Servo.class, Constants.wristID), runtime, telemetry);
-
- */
-/*
-        ExtenderSubsystem extenderSubsystem = new ExtenderSubsystem(
-                hardwareMap.get(DcMotor.class, Constants.extenderID),
-                hardwareMap.get(TouchSensor.class, Constants.extenderLimitSwitchID),
-                runtime, telemetry);
-
- */
 
         ArmSubsystem armSubsystem = new ArmSubsystem(
                 hardwareMap.get(DcMotor.class, Constants.armID),
                 hardwareMap.get(TouchSensor.class, Constants.armLimitSwitchID),
-                runtime, telemetry, true);
-
+                runtime, telemetry, false);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-
-            drivetrainSubsystem.driveManual(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-
-            if (gamepad1.a) {
-                drivetrainSubsystem.resetGyro();
-            }
-
-            armSubsystem.ManualPositionArm(gamepad2.dpad_left, gamepad2.dpad_right);
-
-            //intakeSubsystem.teleOPIntake(gamepad2.right_trigger, gamepad2.left_trigger);
-            //wristSubsystem.manualAngleWrist(gamepad2.right_bumper, gamepad2.left_bumper);
-
-            /*
-            if (gamepad2.dpad_up) {
-                wristSubsystem.autoAngleWrist(WristSubsystem.Positions.UP);
-            }
-            else if (gamepad2.dpad_down) {
-                wristSubsystem.autoAngleWrist(WristSubsystem.Positions.DOWN);
-            }
-
-             */
-
-
-
-            /*
-            if (gamepad2.x) {
-                extenderSubsystem.extendToPosition(ExtenderSubsystem.Position.RETRACTED);
-            }
-            else if (gamepad2.y) {
-                extenderSubsystem.extendToPosition(ExtenderSubsystem.Position.HALFWAY);
-            }
-            else if (gamepad2.b) {
-                extenderSubsystem.extendToPosition(ExtenderSubsystem.Position.EXTENDED);
-            }
-
-             */
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("angle", drivetrainSubsystem.getAngle());
-            telemetry.update();
-        }
+        //For Auto, commands are performed sequentially with sleep commands between them.
+        armSubsystem.zeroPosition();
+        drivetrainSubsystem.driveAuto(2, DrivetrainSubsystem.Directions.FORWARD);
+        drivetrainSubsystem.autoTurn(90, DrivetrainSubsystem.Directions.RIGHT);
+        drivetrainSubsystem.driveAuto(60, DrivetrainSubsystem.Directions.FORWARD);
     }
 }

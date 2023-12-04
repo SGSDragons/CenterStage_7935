@@ -33,18 +33,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
-
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Utilities.Constants;
 
-@TeleOp(name="Main TeleOp", group="Linear OpMode")
+@TeleOp(name="PID Test", group="Linear OpMode")
 //@Disabled
-public class MainTeleOp extends LinearOpMode {
+public class PIDTestTeleOP extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -93,13 +91,70 @@ public class MainTeleOp extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            drivetrainSubsystem.driveManual(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-            if (gamepad1.a) {
-                drivetrainSubsystem.resetGyro();
+
+            if (gamepad1.right_bumper) {
+                drivetrainSubsystem.autoTurn(90, DrivetrainSubsystem.Directions.RIGHT);
+            }
+            if (gamepad1.left_bumper) {
+                drivetrainSubsystem.autoTurn(90, DrivetrainSubsystem.Directions.LEFT);
             }
 
-            armSubsystem.ManualPositionArm(gamepad2.dpad_left, gamepad2.dpad_right);
+            if (gamepad1.a) {
+                drivetrainSubsystem.driveAuto(12, DrivetrainSubsystem.Directions.FORWARD);
+            }
+
+            if (gamepad1.b) {
+                drivetrainSubsystem.driveAuto(12, DrivetrainSubsystem.Directions.BACKWARD);
+            }
+
+            if (gamepad2.start) {
+                if (gamepad2.left_bumper) {
+                    Constants.driveK -= 0.01;
+                }
+                else if (gamepad2.right_bumper) {
+                    Constants.driveK += 0.01;
+                }
+
+                if (gamepad2.dpad_left) {
+                    Constants.driveI -= 0.01;
+                }
+                else if (gamepad2.dpad_right) {
+                    Constants.driveI += 0.01;
+                }
+
+                if (gamepad2.dpad_down) {
+                    Constants.driveD -= 0.01;
+                }
+                else if (gamepad2.dpad_up) {
+                    Constants.driveD += 0.01;
+                }
+            }
+
+            if (gamepad2.back) {
+                if (gamepad2.left_bumper) {
+                    Constants.turnP -= 0.01;
+                }
+                else if (gamepad2.right_bumper) {
+                    Constants.turnP += 0.01;
+                }
+
+                if (gamepad2.dpad_left) {
+                    Constants.turnI -= 0.01;
+                }
+                else if (gamepad2.dpad_right) {
+                    Constants.turnI += 0.01;
+                }
+
+                if (gamepad2.dpad_down) {
+                    Constants.turnD -= 0.01;
+                }
+                else if (gamepad2.dpad_up) {
+                    Constants.turnD += 0.01;
+                }
+            }
+
+            //armSubsystem.ManualPositionArm(gamepad2.dpad_left, gamepad2.dpad_right);
 
             //intakeSubsystem.teleOPIntake(gamepad2.right_trigger, gamepad2.left_trigger);
             //wristSubsystem.manualAngleWrist(gamepad2.right_bumper, gamepad2.left_bumper);
@@ -130,8 +185,14 @@ public class MainTeleOp extends LinearOpMode {
              */
 
             // Show the elapsed game time and wheel power.
+            int [] driveCounts = drivetrainSubsystem.getDriveMotorCounts();
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("angle", drivetrainSubsystem.getAngle());
+            telemetry.addData("DriveCurrent", "backLeft, backRight, frontLeft, frontRight",
+                    driveCounts[0], driveCounts[1], driveCounts[2], driveCounts[3]);
+            telemetry.addData("ArmCurrent", armSubsystem.getArmPosition());
+            telemetry.addData("AngleCurrent", drivetrainSubsystem.getAngle());
+            telemetry.addData("Drive PID", "K, I, D", Constants.driveK, Constants.driveI, Constants.driveD);
+            telemetry.addData("Turn PID", "K, I, D", Constants.turnP, Constants.turnI, Constants.turnD);
             telemetry.update();
         }
     }
