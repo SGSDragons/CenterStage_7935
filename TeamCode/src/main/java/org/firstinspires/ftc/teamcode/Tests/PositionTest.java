@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.Tests;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -44,8 +43,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.Utilities.Constants;
-import org.firstinspires.ftc.teamcode.Utilities.Templates.CommandTemplate;
-import org.firstinspires.ftc.teamcode.Utilities.Templates.SubsystemTemplate;
 
 @TeleOp(name="Position Test", group="Linear OpMode")
 //@Disabled

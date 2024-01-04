@@ -45,7 +45,7 @@ public class ArmSubsystem {
 
         armMotorPID = new MiniPID(Constants.armP, Constants.armI, Constants.armD);
         armMotorPID.setOutputLimits(-Constants.teleOPArmPower, Constants.teleOPArmPower);
-        zeroPosition();
+
     }
 
     public void autoPositionArm(Position position) {
@@ -83,16 +83,23 @@ public class ArmSubsystem {
         arm.setPower(0.0);
     }
 
-    private void zeroPosition() {
+    public void zeroPosition() {
+        double startTime = runtime.seconds();
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         while (!limitSwitch.isPressed()) {
             arm.setPower(Constants.armZeroingPower);
+
+            if (runtime.seconds() - startTime > 4) {
+                break;
+            }
         }
         arm.setPower(0.0);
-        armZeroPosition = (int) (arm.getCurrentPosition() + 56);
+        armZeroPosition = (int) (arm.getCurrentPosition() + Constants.armZeroingAddition);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(armZeroPosition);
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
 
     //Rotates the arm based off DPad input.
     public void ManualPositionArm(boolean gamepad2_DPadLeft, boolean gamepad2_DPadRight) {
@@ -100,14 +107,17 @@ public class ArmSubsystem {
         if (rangeOfMotion.contains(arm.getCurrentPosition())) {
             if (gamepad2_DPadRight) {
                 armMotorPower = Constants.teleOPArmPower;
+                arm.setPower(armMotorPower);
             }
 
             else if (gamepad2_DPadLeft) {
                 armMotorPower = -Constants.teleOPArmPower;
+                arm.setPower(armMotorPower);
             }
 
             else {
                 armMotorPower = 0.0;
+                arm.setPower(armMotorPower);
             }
         }
 

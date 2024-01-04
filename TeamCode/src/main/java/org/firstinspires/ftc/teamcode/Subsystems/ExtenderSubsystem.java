@@ -34,7 +34,6 @@ public class ExtenderSubsystem {
 
         this.runtime = runtime;
         this.telemetry = telemetry;
-        zeroPosition();
     }
 
     public void extendToPosition(Position extensionPosition) {
@@ -44,16 +43,20 @@ public class ExtenderSubsystem {
             case EXTENDED:
                 targetPosition = (int) (Constants.extenderMaxPositionInches * Constants.extenderMotorCPI);
                 break;
+
             case HALFWAY:
                 targetPosition = (int) (Constants.extenderMaxPositionInches/2 * Constants.extenderMotorCPI);
                 break;
+
             case RETRACTED:
                 targetPosition = extenderZeroPosition;
                 break;
+
             default:
                 return;
         }
         extender.setTargetPosition(targetPosition);
+        extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void extendToCustomPosition(double targetPositionInches) {
@@ -63,12 +66,14 @@ public class ExtenderSubsystem {
         extender.setTargetPosition(targetPosition);
     }
 
-    private void zeroPosition() {
+    public void zeroPosition() {
+        extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         double startTime = runtime.seconds();
         while (!limitSwitch.isPressed()) {
             extender.setPower(Constants.extenderZeroingPower);
 
-            if (runtime.seconds() - startTime > 8) {
+            if (runtime.seconds() - startTime > 4) {
                 break;
             }
         }

@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -39,7 +40,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Utilities.Constants;
 
 @Autonomous(name="Test Auto", group="Linear OpMode")
-//@Disabled
+@Disabled
 public class TestAuto extends LinearOpMode {
 
     // Declare OpMode members.

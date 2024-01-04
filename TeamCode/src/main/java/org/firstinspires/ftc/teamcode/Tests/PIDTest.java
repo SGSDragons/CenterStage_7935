@@ -29,40 +29,36 @@
 
 package org.firstinspires.ftc.teamcode.Tests;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Utilities.MiniPID;
+import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.Utilities.Constants;
 
 @TeleOp(name="PID Test", group="Linear OpMode")
-@Disabled
+//@Disabled
 public class PIDTest extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor testMotor;
-    MiniPID testPID;
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        testMotor  = hardwareMap.get(DcMotor.class, "test");
-        testMotor.setDirection(DcMotor.Direction.FORWARD);
-        testMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //Initialize Subsystems
+        DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(
+                hardwareMap.get(DcMotor.class, Constants.backRightDriveID),
+                hardwareMap.get(DcMotor.class, Constants.backLeftDriveID),
+                hardwareMap.get(DcMotor.class, Constants.frontRightDriveID),
+                hardwareMap.get(DcMotor.class, Constants.frontLeftDriveID),
+                hardwareMap.get(IMU.class, "imu"),
+                runtime, telemetry);
 
-        double p = 0.0125;
-        double i = 0.0002;
-        double d = 0.0;
-
-        testPID = new MiniPID(p, i, d);
-        testPID.setOutputLimits(-1.0, 1.0);
-        double targetPos = 0;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -70,29 +66,77 @@ public class PIDTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double testPower;
 
-
-            if (gamepad1.x) {
-                targetPos = 1000;
+            if (gamepad1.right_bumper) {
+                drivetrainSubsystem.autoTurn(90, DrivetrainSubsystem.Directions.RIGHT);
             }
-            else if (gamepad1.a) {
-                targetPos = 0;
+            if (gamepad1.left_bumper) {
+                drivetrainSubsystem.autoTurn(90, DrivetrainSubsystem.Directions.LEFT);
             }
 
-            double inputPower = testPID.getOutput(testMotor.getCurrentPosition(), targetPos);
-            testMotor.setPower(inputPower);
+            if (gamepad1.a) {
+                drivetrainSubsystem.autoDrive(6, 0);
+            }
+
+            if (gamepad1.b) {
+                drivetrainSubsystem.autoDrive(-6,0);
+            }
+
+            if (gamepad2.start) {
+                if (gamepad2.left_bumper) {
+                    Constants.driveK -= 0.01;
+                }
+                else if (gamepad2.right_bumper) {
+                    Constants.driveK += 0.01;
+                }
+
+                if (gamepad2.dpad_left) {
+                    Constants.driveI -= 0.01;
+                }
+                else if (gamepad2.dpad_right) {
+                    Constants.driveI += 0.01;
+                }
+
+                if (gamepad2.dpad_down) {
+                    Constants.driveD -= 0.01;
+                }
+                else if (gamepad2.dpad_up) {
+                    Constants.driveD += 0.01;
+                }
+            }
+
+            if (gamepad2.back) {
+                if (gamepad2.left_bumper) {
+                    Constants.turnK -= 0.01;
+                }
+                else if (gamepad2.right_bumper) {
+                    Constants.turnK += 0.01;
+                }
+
+                if (gamepad2.dpad_left) {
+                    Constants.turnI -= 0.01;
+                }
+                else if (gamepad2.dpad_right) {
+                    Constants.turnI += 0.01;
+                }
+
+                if (gamepad2.dpad_down) {
+                    Constants.turnD -= 0.01;
+                }
+                else if (gamepad2.dpad_up) {
+                    Constants.turnD += 0.01;
+                }
+            }
 
 
             // Show the elapsed game time and wheel power.
+            int [] driveCounts = drivetrainSubsystem.getDriveMotorCounts();
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motor", testMotor.getPower());
-            telemetry.addData("P", p);
-            telemetry.addData("I", i);
-            telemetry.addData("D", d);
-            telemetry.addData("Input Power", inputPower);
-            telemetry.addData("Target Position", targetPos);
-            telemetry.addData("Actual Position", testMotor.getCurrentPosition());
+            telemetry.addData("DriveCurrent", "backLeft, backRight, frontLeft, frontRight",
+                    driveCounts[0], driveCounts[1], driveCounts[2], driveCounts[3]);
+            telemetry.addData("AngleCurrent", drivetrainSubsystem.getAngle());
+            telemetry.addData("Drive PID", "K, I, D", Constants.driveK, Constants.driveI, Constants.driveD);
+            telemetry.addData("Turn PID", "K, I, D", Constants.turnK, Constants.turnI, Constants.turnD);
             telemetry.update();
         }
     }

@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.WristSubsystem;
-import org.firstinspires.ftc.teamcode.Utilities.Templates.SubsystemTemplate;
 
 public class AutoIntake {
     ElapsedTime runtime;
@@ -50,7 +49,7 @@ public class AutoIntake {
         while (runtime.seconds() - initialRuntime < 0.5) {}
 
         intakeSubsystem.intake();
-        drivetrainSubsystem.driveAuto(2, DrivetrainSubsystem.Directions.FORWARD);
+        drivetrainSubsystem.driveAutoOld(2, DrivetrainSubsystem.Directions.FORWARD);
 
         initialRuntime = runtime.seconds();
         while (runtime.seconds() - initialRuntime < 0.5) {}

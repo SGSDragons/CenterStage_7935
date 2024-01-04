@@ -70,7 +70,7 @@ public class TestTeleOP extends LinearOpMode {
                 drivetrainSubsystem.resetGyro();
             }
 
-            drivetrainSubsystem.driveManual(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            drivetrainSubsystem.joystickDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

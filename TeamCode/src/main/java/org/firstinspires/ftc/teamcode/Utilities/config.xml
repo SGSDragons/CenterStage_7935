@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<config>
+    <hardwareID>
+        <drivetrain key="driveBL">backLeftDrive</drivetrain>
+        <drivetrain key="driveBR">backRightDrive</drivetrain>
+        <drivetrain key="driveFL">frontLeftDrive</drivetrain>
+        <drivetrain key="driveFR">frontRightDrive</drivetrain>
+
+        <arm key="arm">arm</arm>
+        <extender key="extender">extender</extender>
+        <extender key="extenderLimit">extenderTouch</extender>
+        <intake key="intake">intake</intake>
+        <wrist key="wrist">wrist</wrist>
+    </hardwareID>
+
+    <operationModes>
+        <drive>
+            <fieldOrientation>true</fieldOrientation>
+            <unlockSpeed>false</unlockSpeed>
+        </drive>
+
+        <arm>
+            <manualMovement>false</manualMovement>
+            <limitSwitchZeroing>false</limitSwitchZeroing>
+        </arm>
+
+        <extender>
+            <manualMovement>false</manualMovement>
+            <limitSwitchZeroing>true</limitSwitchZeroing>
+        </extender>
+    </operationModes>
+
+</config>
